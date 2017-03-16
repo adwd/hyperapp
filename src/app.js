@@ -14,36 +14,12 @@ export default function (app) {
     onRender: []
   }
 
-  var plugins = [app].concat((app.plugins || []).map(function (plugin) {
-    return plugin(app)
-  }))
-
   var node
   var root
   var batch = []
 
-  for (var i = 0; i < plugins.length; i++) {
-    var plugin = plugins[i]
-
-    if (plugin.model !== undefined) {
-      model = merge(model, plugin.model)
-    }
-
-    if (plugin.actions) {
-      init(actions, plugin.actions)
-    }
-
-    if (plugin.subscriptions) {
-      subscriptions = subscriptions.concat(plugin.subscriptions)
-    }
-
-    var _hooks = plugin.hooks
-    if (_hooks) {
-      Object.keys(_hooks).forEach(function (key) {
-        hooks[key].push(_hooks[key])
-      })
-    }
-  }
+  // もしかしたらこれいるかも？
+  // init(actions, plugin.actions)
 
   function onError(error) {
     for (var i = 0; i < hooks.onError.length; i++) {
