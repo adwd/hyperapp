@@ -696,21 +696,4 @@ describe("app", () => {
       })
     })
   })
-
-  describe("root", () => {
-    it("appends view to given root", () => {
-      app({
-        root: document.body.appendChild(document.createElement("main")),
-        view: _ => h("div", {}, "foo")
-      })
-
-      expectHTMLToBe(`
-				<main>
-					<div>
-						foo
-					</div>
-				</main>
-			`)
-    })
-  })
 })
