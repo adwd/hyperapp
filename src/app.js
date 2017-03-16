@@ -11,7 +11,6 @@ export default function (app) {
   var hooks = {
     onError: [],
     onAction: [],
-    onUpdate: [],
     onRender: []
   }
 
@@ -78,10 +77,6 @@ export default function (app) {
             return result
 
           } else {
-            for (i = 0; i < hooks.onUpdate.length; i++) {
-              hooks.onUpdate[i](model, result, data)
-            }
-
             model = merge(model, result)
             render(model, view)
           }
@@ -169,11 +164,7 @@ export default function (app) {
         : document.createElement(node.tag)
 
       for (var name in node.data) {
-        if (name === "onCreate") {
-          defer(node.data[name], element)
-        } else {
-          setElementData(element, name, node.data[name])
-        }
+        setElementData(element, name, node.data[name])
       }
 
       for (var i = 0; i < node.children.length; i++) {
@@ -229,10 +220,7 @@ export default function (app) {
       var oldValue = oldData[name]
       var realValue = element[name]
 
-      if (name === "onUpdate") {
-        defer(value, element)
-
-      } else if (
+      if (
         value !== oldValue || typeof realValue === "boolean" && realValue !== value
       ) {
         setElementData(element, name, value, oldValue)
@@ -252,10 +240,6 @@ export default function (app) {
       // collect all the elements and delete them in a batch.
 
       batch.push(parent.removeChild.bind(parent, element))
-
-      if (oldNode && oldNode.data && oldNode.data.onRemove) {
-        defer(oldNode.data.onRemove, element)
-      }
 
     } else if (shouldUpdate(node, oldNode)) {
       if (typeof node === "string") {

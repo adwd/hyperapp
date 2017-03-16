@@ -396,47 +396,6 @@ describe("app", () => {
   })
 
   describe("hooks", () => {
-    it("calls onAction/onUpdate/onRender", done => {
-      app({
-        view: model => h("div", {}, model),
-        model: "foo",
-        actions: {
-          set: (_, data) => data
-        },
-        subscriptions: [
-          (_, actions) => actions.set("bar")
-        ],
-        hooks: {
-          onAction: (action, data) => {
-            expect(action).toBe("set")
-            expect(data).toBe("bar")
-          },
-          onUpdate: (oldModel, newModel, data) => {
-            expect(oldModel).toBe("foo")
-            expect(newModel).toBe("bar")
-            expect(data).toBe("bar")
-          },
-          onRender: (model, view) => {
-            if (model === "foo") {
-              expect(view("bogus")).toEqual({
-                tag: "div",
-                data: {},
-                children: ["bogus"]
-              })
-
-              return view
-
-            } else {
-              expect(model).toBe("bar")
-              done()
-
-              return view
-            }
-          }
-        }
-      })
-    })
-
     it("calls onAction with full name for nested actions", done => {
       app({
         model: "foo",
@@ -501,11 +460,6 @@ describe("app", () => {
             expect(action).toBe("foo")
             expect(data).toBe("bar")
             expect(++count).toBe(2)
-          },
-          onUpdate: (oldModel, newModel) => {
-            expect(oldModel).toBe("foo")
-            expect(newModel).toBe("foobar")
-            expect(++count).toBe(5)
           }
         }
       })
@@ -516,11 +470,6 @@ describe("app", () => {
             expect(action).toBe("foo")
             expect(data).toBe("bar")
             expect(++count).toBe(3)
-          },
-          onUpdate: (oldModel, newModel) => {
-            expect(oldModel).toBe("foo")
-            expect(newModel).toBe("foobar")
-            expect(++count).toBe(6)
           }
         }
       })
@@ -536,11 +485,6 @@ describe("app", () => {
             expect(action).toBe("foo")
             expect(data).toBe("bar")
             expect(++count).toBe(1)
-          },
-          onUpdate: (oldModel, newModel) => {
-            expect(oldModel).toBe("foo")
-            expect(newModel).toBe("foobar")
-            expect(++count).toBe(4)
           }
         },
         subscriptions: [
@@ -767,61 +711,6 @@ describe("app", () => {
 					</div>
 				</main>
 			`)
-    })
-  })
-
-  describe("lifecycle methods", () => {
-    it("fires onCreate", done => {
-      app({
-        model: 1,
-        view: model => h("div", {
-          onCreate: e => {
-            expect(model).toBe(1)
-            done()
-          }
-        })
-      })
-    })
-
-    it("fires onUpdate", done => {
-      app({
-        model: 1,
-        view: model => h("div", {
-          onUpdate: e => {
-            expect(model).toBe(2)
-            done()
-          }
-        }),
-        actions: {
-          add: model => model + 1
-        },
-        subscriptions: [
-          (_, actions) => actions.add()
-        ]
-      })
-    })
-
-    it("fires onRemove", done => {
-      const treeA = h("ul", {},
-        h("li", {}, "foo"),
-        h("li", {
-          onRemove: _ => {
-            done()
-          }
-        }, "bar"))
-
-      const treeB = h("ul", {}, h("li", {}, "foo"))
-
-      app({
-        model: true,
-        view: _ => _ ? treeA : treeB,
-        actions: {
-          toggle: model => !model
-        },
-        subscriptions: [
-          (_, actions) => actions.toggle()
-        ]
-      })
     })
   })
 })
