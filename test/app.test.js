@@ -6,30 +6,6 @@ import { expectHTMLToBe } from "./util"
 beforeEach(() => document.body.innerHTML = "")
 
 describe("app", () => {
-  it("boots on DOMContentLoaded", done => {
-    Object.defineProperty(document, "readyState", {
-      writable: true
-    })
-
-    window.document.readyState = "loading"
-
-    app({
-      model: "foo",
-      subscriptions: [
-        model => {
-          expect(model).toEqual("foo")
-          done()
-        }
-      ]
-    })
-
-    window.document.readyState = "complete"
-
-    const event = document.createEvent("Event")
-    event.initEvent("DOMContentLoaded", true, true)
-    window.document.dispatchEvent(event)
-  })
-
   describe("model", () => {
     it("renders a model", () => {
       app({
@@ -176,78 +152,6 @@ describe("app", () => {
 					</div>
 				</div>
 			`)
-    })
-
-    it("toggles class attributes", () => {
-      app({
-        model: true,
-        view: model => h("div", model ? { class: "foo" } : {}, "bar"),
-        actions: {
-          toggle: model => !model
-        },
-        subscriptions: [
-          (_, actions) => {
-            expectHTMLToBe(`
-							<div>
-								<div class="foo">
-									bar
-								</div>
-							</div>
-						`)
-
-            actions.toggle()
-
-            expectHTMLToBe(`
-							<div>
-								<div>
-									bar
-								</div>
-							</div>
-						`)
-          }
-        ]
-      })
-    })
-
-    it("updates/removes element data", () => {
-      app({
-        model: false,
-        view: model => h("div", model
-          ? { id: "xuuq", foo: true } : {
-            id: "quux",
-            class: "foo",
-            style: {
-              color: "red"
-            },
-            foo: true,
-            baz: false
-          }, "bar"
-        ),
-        actions: {
-          toggle: model => !model
-        },
-        subscriptions: [
-          (_, actions) => {
-            expectHTMLToBe(`
-							<div>
-								<div id="quux" class="foo" style="color: red;" foo="true">
-									bar
-								</div>
-							</div>
-						`)
-
-            actions.toggle()
-
-            expectHTMLToBe(`
-							<div>
-								<div id="xuuq" foo="true">
-									bar
-								</div>
-							</div>
-						`)
-          }
-        ]
-      })
     })
 
     it("keeps selectionStart and selectionEnd properties on text inputs intact on update", () => {
@@ -407,14 +311,6 @@ describe("app", () => {
             }
           }
         ]
-      })
-    })
-  })
-
-  describe("subscriptions", () => {
-    it("are called when the app starts", done => {
-      app({
-        subscriptions: [done]
       })
     })
   })

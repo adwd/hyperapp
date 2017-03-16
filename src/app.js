@@ -7,7 +7,6 @@ export default function (app) {
 
   var model
   var actions = {}
-  var subscriptions = []
 
   var node
   var root
@@ -52,10 +51,6 @@ export default function (app) {
     root = document.body.appendChild(document.createElement("div"))
 
     render(model, view)
-
-    for (var i = 0; i < subscriptions.length; i++) {
-      subscriptions[i](model, actions, onError)
-    }
   })
 
   function load(fn) {
