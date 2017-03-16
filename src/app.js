@@ -8,11 +8,6 @@ export default function (app) {
   var model
   var actions = {}
   var subscriptions = []
-  var hooks = {
-    onError: [],
-    onAction: [],
-    onRender: []
-  }
 
   var node
   var root
@@ -22,13 +17,7 @@ export default function (app) {
   // init(actions, plugin.actions)
 
   function onError(error) {
-    for (var i = 0; i < hooks.onError.length; i++) {
-      hooks.onError[i](error)
-    }
-
-    if (i <= 0) {
-      throw error
-    }
+    throw error
   }
 
   function init(container, group, lastName) {
@@ -43,10 +32,6 @@ export default function (app) {
 
       if (typeof action === "function") {
         container[key] = function (data) {
-          for (i = 0; i < hooks.onAction.length; i++) {
-            hooks.onAction[i](name, data)
-          }
-
           var result = action(model, data, actions, onError)
 
           if (result == null || typeof result.then === "function") {
@@ -82,10 +67,6 @@ export default function (app) {
   }
 
   function render(model, view) {
-    for (i = 0; i < hooks.onRender.length; i++) {
-      view = hooks.onRender[i](model, view)
-    }
-
     patch(root, node, node = view(model, actions), 0)
 
     for (var i = 0; i < batch.length; i++) {

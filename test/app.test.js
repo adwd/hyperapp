@@ -395,49 +395,8 @@ describe("app", () => {
     })
   })
 
-  describe("hooks", () => {
-    it("calls onAction with full name for nested actions", done => {
-      app({
-        model: "foo",
-        actions: {
-          foo: {
-            bar: {
-              baz: {
-                set: (_, data) => data
-              }
-            }
-          }
-        },
-        hooks: {
-          onAction: (name, data) => {
-            expect(name).toBe("foo.bar.baz.set")
-            expect(data).toBe("baz")
-            done()
-          }
-        },
-        subscriptions: [
-          (_, actions) => actions.foo.bar.baz.set("baz")
-        ]
-      })
-    })
-
-    it("calls onError", done => {
-      app({
-        hooks: {
-          onError: err => {
-            expect(err).toBe("foo")
-            done()
-          }
-        },
-        subscriptions: [
-          (model, actions, error) => {
-            error("foo")
-          }
-        ]
-      })
-    })
-
-    it("throw if onError hook is not given when error is called", () => {
+  describe("onError", () => {
+    it("throw when error is called", () => {
       app({
         subscriptions: [
           (model, actions, error) => {
