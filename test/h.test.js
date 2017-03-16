@@ -31,44 +31,6 @@ describe("h", () => {
     })
   })
 
-  it("concatenates multiple children string/number", () => {
-    expect(
-      h("div", {}, "foo", "bar", "baz")
-    ).toEqual({
-      tag: "div",
-      data: {},
-      children: ["foobarbaz"]
-    })
-
-    expect(
-      h("div", {}, ["foo", "bar", "baz"])
-    ).toEqual({
-      tag: "div",
-      data: {},
-      children: ["foobarbaz"]
-    })
-
-    expect(
-      h("div", {}, 1, "foo", 2, "baz", 3)
-    ).toEqual({
-      tag: "div",
-      data: {},
-      children: ["1foo2baz3"]
-    })
-
-    expect(
-      h("div", {}, "foo", h("div", {}, "bar"), "baz", "quux")
-    ).toEqual({
-      tag: "div",
-      data: {},
-      children: ["foo", {
-        tag: "div",
-        data: {},
-        children: ["bar"]
-      }, "bazquux"]
-    })
-  })
-
   it("creates a vnode with props data", () => {
     const props = {
       id: "foo",

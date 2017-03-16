@@ -1,8 +1,6 @@
 var i, node, children, stack = []
 
 export default function (tag, data) {
-  var canConcat, oldCanConcat
-
   children = []
   i = arguments.length
 
@@ -24,17 +22,7 @@ export default function (tag, data) {
         node = node + ""
       }
 
-      // Concatenate contiguous number/string nodes into one string.
-      // The idea is to avoid creating unnecessary text nodes.
-
-      canConcat = typeof node === "string"
-
-      if (canConcat && oldCanConcat) {
-        children[children.length - 1] += node
-      } else {
-        children.push(node)
-        oldCanConcat = canConcat
-      }
+      children.push(node)
     }
   }
 
