@@ -1,0 +1,28 @@
+{
+  "name": "helloworld",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack -p",
+    "build:watch": "webpack --watch",
+    "http-server": "http-server",
+    "dev": "run-p http-server build:watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "hyperapp": "../../"
+  },
+  "devDependencies": {
+    "babel-core": "^6.24.0",
+    "babel-loader": "^6.4.1",
+    "babel-plugin-transform-react-jsx": "^6.23.0",
+    "babel-preset-es2015": "^6.24.0",
+    "http-server": "^0.9.0",
+    "npm-run-all": "^4.0.2",
+    "webpack": "^2.2.1"
+  }
+}
