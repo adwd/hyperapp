@@ -1,3 +1,18 @@
+/**
+ * import { app } from "hyperapp"
+ * app({
+ *   model,
+ *   actions,
+ *   view
+ * })
+ * のように実行されるhyperappのエンジン。
+ *
+ * 
+ * action実行
+ * -> 次のmodel(状態)を計算
+ * -> 前の状態と比較して、変更されていたらDOM Elementを追加・更新・削除
+ * -> virtualnodeのルートから末尾までそれをやり、表示が更新される
+ */
 export default function (app) {
   var view = app.view || function () {
     return ""
@@ -18,6 +33,8 @@ export default function (app) {
     Object.keys(app.actions).forEach(function (key) {
       var action = app.actions[key]
 
+      // actionsを作る
+      // actionは実行すると次のmodelを作り、それをつかってrenderする
       actions[key] = function (data) {
         var result = action(model, data, actions)
 
@@ -31,6 +48,7 @@ export default function (app) {
     })
   }
 
+  // DOMがロードされていればrenderを実行、まだだったらDOMContentLoadedイベントでrenderする
   load(function () {
     root = document.body.appendChild(document.createElement("div"))
 
@@ -45,9 +63,11 @@ export default function (app) {
     }
   }
 
+  // modelとviewを使って、DOMを更新する
   function render(model, view) {
     patch(root, node, node = view(model, actions), 0)
 
+    // batchにはDOM削除のfunctionが入っている
     for (var i = 0; i < batch.length; i++) {
       batch[i]()
     }
@@ -55,6 +75,7 @@ export default function (app) {
     batch = []
   }
 
+  // virtualnodeからDOM Elementを作る
   function createElementFrom(node) {
     var element
 
@@ -127,6 +148,8 @@ export default function (app) {
     }
   }
 
+  // oldNodeとnodeを比較してDOMの追加・変更・削除を実行する
+  // 削除はbatchにためておいて、renderで実行する
   function patch(parent, oldNode, node, index) {
     var element = parent.childNodes[index]
 
@@ -134,10 +157,6 @@ export default function (app) {
       parent.appendChild(createElementFrom(node))
 
     } else if (node === undefined) {
-      // Removing a child one at a time updates the DOM, so we end up
-      // with an index out of date that needs to be adjusted. Instead,
-      // collect all the elements and delete them in a batch.
-
       batch.push(parent.removeChild.bind(parent, element))
 
     } else if (shouldUpdate(node, oldNode)) {
@@ -153,6 +172,7 @@ export default function (app) {
       var len = node.children.length, oldLen = oldNode.children.length
 
       for (var i = 0; i < len || i < oldLen; i++) {
+        // childrenにも再帰的にpatchしていく
         patch(element, oldNode.children[i], node.children[i], i)
       }
     }

@@ -1,3 +1,26 @@
+/**
+ * h.js
+ *
+ * hはJSXで書いたhtmlをhyperappのvirtualnodeに変換する。
+ * Signature: (tag, data, children)
+ *   tag: タグ a div h1 など
+ *   data: タグのattributes, styles, events
+ *   children: a string or an array of virtual nodes.
+ *
+ * <a href="/foo">hello</a>
+ *  ↓
+ * { tag: 'a', data: { href: '/foo' }, children: [ 'hello' ] }
+ *
+ * <ul><li>foo</li><li>bar</li></ul>
+ *  ↓
+ * { tag: 'ul',
+ *   data: {},
+ *   children:
+ *    [ { tag: 'li', data: {}, children: [ 'foo' ] },
+ *      { tag: 'li', data: {}, children: [ 'bar' ] }
+ *    ]
+ *  }
+ */
 var i, node, children, stack = []
 
 export default function (tag, data) {
