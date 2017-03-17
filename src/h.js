@@ -26,10 +26,6 @@ export default function (tag, data) {
     }
   }
 
-  if (typeof tag === "function") {
-    return tag(data, children)
-  }
-
   return {
     tag: tag,
     data: data || {},
