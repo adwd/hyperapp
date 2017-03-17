@@ -12,8 +12,13 @@ export default function (app) {
   var root
   var batch = []
 
-  // もしかしたらこれいるかも？
-  // init(actions, plugin.actions)
+  if (app.model !== undefined) {
+    model = merge(model, app.model)
+  }
+
+  if (app.actions) {
+    init(actions, app.actions)
+  }
 
   function onError(error) {
     throw error
@@ -92,12 +97,6 @@ export default function (app) {
   function isPrimitive(type) {
     type = typeof type
     return type === "string" || type === "number" || type === "boolean"
-  }
-
-  function defer(fn, data) {
-    setTimeout(function () {
-      fn(data)
-    }, 0)
   }
 
   function shouldUpdate(a, b) {
