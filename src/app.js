@@ -1,5 +1,3 @@
-var SVG_NS = "http://www.w3.org/2000/svg"
-
 export default function (app) {
   var view = app.view || function () {
     return ""
@@ -91,23 +89,21 @@ export default function (app) {
     return a.tag !== b.tag || typeof a !== typeof b || isPrimitive(a) && a !== b
   }
 
-  function createElementFrom(node, isSVG) {
+  function createElementFrom(node) {
     var element
 
     if (typeof node === "string") {
       element = document.createTextNode(node)
 
     } else {
-      element = (isSVG = isSVG || node.tag === "svg")
-        ? document.createElementNS(SVG_NS, node.tag)
-        : document.createElement(node.tag)
+      element = document.createElement(node.tag)
 
       for (var name in node.data) {
         setElementData(element, name, node.data[name])
       }
 
       for (var i = 0; i < node.children.length; i++) {
-        element.appendChild(createElementFrom(node.children[i], isSVG))
+        element.appendChild(createElementFrom(node.children[i]))
       }
     }
 
@@ -138,17 +134,15 @@ export default function (app) {
     } else {
       element.setAttribute(name, value)
 
-      if (element.namespaceURI !== SVG_NS) {
-        if (element.type === "text") {
-          var oldSelStart = element.selectionStart
-          var oldSelEnd = element.selectionEnd
-        }
+      if (element.type === "text") {
+        var oldSelStart = element.selectionStart
+        var oldSelEnd = element.selectionEnd
+      }
 
-        element[name] = value
+      element[name] = value
 
-        if (oldSelStart >= 0) {
-          element.setSelectionRange(oldSelStart, oldSelEnd)
-        }
+      if (oldSelStart >= 0) {
+        element.setSelectionRange(oldSelStart, oldSelEnd)
       }
     }
   }
