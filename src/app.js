@@ -17,7 +17,20 @@ export default function (app) {
   }
 
   if (app.actions) {
-    init(actions, app.actions)
+    Object.keys(app.actions).forEach(function (key) {
+      var action = app.actions[key]
+
+      actions[key] = function (data) {
+        var result = action(model, data, actions, onError)
+
+        if (result == null || typeof result.then === "function") {
+          return result
+        } else {
+          model = merge(model, result)
+          render(model, view)
+        }
+      }
+    })
   }
 
   function onError(error) {
@@ -25,31 +38,6 @@ export default function (app) {
   }
 
   function init(container, group, lastName) {
-    Object.keys(group).forEach(function (key) {
-      if (!container[key]) {
-        container[key] = {}
-      }
-
-      var name = lastName ? lastName + "." + key : key
-      var action = group[key]
-      var i
-
-      if (typeof action === "function") {
-        container[key] = function (data) {
-          var result = action(model, data, actions, onError)
-
-          if (result == null || typeof result.then === "function") {
-            return result
-
-          } else {
-            model = merge(model, result)
-            render(model, view)
-          }
-        }
-      } else {
-        init(container[key], action, name)
-      }
-    })
   }
 
   load(function () {
