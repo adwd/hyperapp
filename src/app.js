@@ -19,7 +19,7 @@ export default function (app) {
       var action = app.actions[key]
 
       actions[key] = function (data) {
-        var result = action(model, data, actions, onError)
+        var result = action(model, data, actions)
 
         if (result == null || typeof result.then === "function") {
           return result
@@ -29,13 +29,6 @@ export default function (app) {
         }
       }
     })
-  }
-
-  function onError(error) {
-    throw error
-  }
-
-  function init(container, group, lastName) {
   }
 
   load(function () {
