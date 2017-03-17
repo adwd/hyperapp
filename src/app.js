@@ -55,33 +55,6 @@ export default function (app) {
     batch = []
   }
 
-  function merge(a, b) {
-    var obj = {}
-    var key
-
-    if (isPrimitive(b) || Array.isArray(b)) {
-      return b
-    }
-
-    for (key in a) {
-      obj[key] = a[key]
-    }
-    for (key in b) {
-      obj[key] = b[key]
-    }
-
-    return obj
-  }
-
-  function isPrimitive(type) {
-    type = typeof type
-    return type === "string" || type === "number" || type === "boolean"
-  }
-
-  function shouldUpdate(a, b) {
-    return a.tag !== b.tag || typeof a !== typeof b || isPrimitive(a) && a !== b
-  }
-
   function createElementFrom(node) {
     var element
 
@@ -183,5 +156,32 @@ export default function (app) {
         patch(element, oldNode.children[i], node.children[i], i)
       }
     }
+  }
+
+  function merge(a, b) {
+    var obj = {}
+    var key
+
+    if (isPrimitive(b) || Array.isArray(b)) {
+      return b
+    }
+
+    for (key in a) {
+      obj[key] = a[key]
+    }
+    for (key in b) {
+      obj[key] = b[key]
+    }
+
+    return obj
+  }
+
+  function isPrimitive(type) {
+    type = typeof type
+    return type === "string" || type === "number" || type === "boolean"
+  }
+
+  function shouldUpdate(a, b) {
+    return a.tag !== b.tag || typeof a !== typeof b || isPrimitive(a) && a !== b
   }
 }
